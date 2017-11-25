@@ -5,7 +5,9 @@ export class Main extends React.Component {
  render() {
    return (
      <section className="main">
-       <WrappedRegister/>
+     <div className="main">
+        <WrappedRegister/>
+     </div>
      </section>
    );
  }
