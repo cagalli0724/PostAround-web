@@ -1,5 +1,8 @@
 import React from 'react';
-import { Form, Input,  Button} from 'antd';
+import { Form, Input,  Button, message} from 'antd';
+import $ from 'jquery';
+import {API_ROOT} from '../constant.js'
+import {Link} from 'react-router-dom';
 const FormItem = Form.Item;
 
 
@@ -12,6 +15,21 @@ class RegistrationForm extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        $.ajax({
+            url:`${API_ROOT}/signup`,
+            method:'POST',
+            data:JSON.stringify({
+                username:values.username,
+                password:values.password
+            })
+        }).then((response)=>{
+            message.success(response);
+            this.props.history.push('/login');
+        },(error)=>{
+            message.error(error.responseText);
+        }).catch((error)=>{
+            message.error(error);
+        });
       }
     });
   }
@@ -70,7 +88,7 @@ class RegistrationForm extends React.Component {
                   label='UserName'
                   hasFeedback
                 >
-                  {getFieldDecorator('UserName', {
+                  {getFieldDecorator('username', {
                     rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
                   })(
                     <Input />
@@ -109,6 +127,7 @@ class RegistrationForm extends React.Component {
 
         <FormItem {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">Register</Button>
+          <p>I already have account, go back to <Link to="Login">login</Link></p>
         </FormItem>
       </Form>
     );
